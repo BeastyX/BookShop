@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BookShop.Areas.Identity.Pages.Account
 {
@@ -117,6 +118,14 @@ namespace BookShop.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+                //var doesEmailExist = await _userManager.FindByEmailAsync(Input.Email);
+
+                if (await _userManager.FindByEmailAsync(Input.Email) != null) 
+                {
+                    ModelState.AddModelError(string.Empty, "Email je vec registrovan!");
+                    return Page();
+                }
+
                 var user = CreateUser();
 
                 await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
