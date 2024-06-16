@@ -6,3 +6,7 @@ Login / Register:
 - Da bih uopste imao pristup login i register page-ovima mora da se doda scafholding za identity area-u
 - Desni taster na Area / Add / Area / sa leve strane biram identity pa desno izaberem identity
 - Izaberem koje page-ove hocu, u ovom slucaju login i register, i svoj DB kontekst i Add na kraju.
+
+Areas:
+- Admin area-u dodajemo desni klik na areas / Add / Area.
+- Dodajemo novo rutiranje pre default sa nazivom "Areas" i pattern-om "{area:exists}/{controller=Home}/{action=Index}/{id?}"
