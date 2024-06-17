@@ -1,0 +1,25 @@
+﻿@model Category
+
+@{
+    ViewData["Title"] = "Izmena kategorije";
+}
+
+<form asp-action="Update" method="post">
+    @Html.AntiForgeryToken()
+    <input asp-for="Id" type="hidden"/>
+
+    <div class="form-floating">
+        <input asp-for="Name" class="form-control shadow border-0" placeholder="" />
+        <label asp-for="Name"></label>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mt-5">
+        <button class="btn btn-primary" type="submit">Izmeni</button>
+    </div>
+</form>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

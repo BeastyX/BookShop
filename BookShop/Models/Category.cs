@@ -8,7 +8,7 @@ namespace BookShop.Models
         [Key] //- Moze atribut [Key] ali i ne mora ako je Id ili CategoryId, onda se podrazumeva
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Naziv kategorije je obavezan!")]
         [MaxLength(100)]
         [DisplayName("Naziv kategorije")]
         public string Name { get; set; } = string.Empty;
