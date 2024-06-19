@@ -43,6 +43,9 @@ public class CategoriesController : Controller
         {
             _context.Add(model);
             _context.SaveChanges();
+
+            TempData["Success"] = "Kategorija uspešno napravljena!";
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -66,7 +69,10 @@ public class CategoriesController : Controller
     public IActionResult UpdatePost(int id, Category model)
     {
         if (id <= 6)
-            ModelState.AddModelError("Name", "Nije dozvoljena izmena predefinisanih kategorija!");
+        {
+            TempData["Error"] = "Nije dozvoljena izmena predefinisanih kategorija!";
+            return RedirectToAction(nameof(Index));
+        }
 
         if (model == null)
             return NotFound();
@@ -87,6 +93,9 @@ public class CategoriesController : Controller
         {
             _context.Update(model);
             _context.SaveChanges();
+
+            TempData["Success"] = "Kategorija uspešno izmenjena!";
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -98,7 +107,10 @@ public class CategoriesController : Controller
     public IActionResult Delete(int id)
     {
         if (id <= 6)
+        {
+            TempData["Error"] = "Nije dozvoljeno brisanje predefinisanih kategorija!";
             return RedirectToAction(nameof(Index));
+        }
 
         var item = _context.Categories.FirstOrDefault(c => c.Id == id);
         if (item == null)
@@ -107,6 +119,7 @@ public class CategoriesController : Controller
         _context.Categories.Remove(item);
         _context.SaveChanges();
 
+        TempData["Success"] = "Kategorija uspešno obrisana!";
         return RedirectToAction(nameof(Index));
     }
 }
