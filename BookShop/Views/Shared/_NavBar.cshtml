@@ -8,9 +8,16 @@
         <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
             <ul class="navbar-nav flex-grow-1 align-items-center">
 
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="Admin" asp-controller="Categories" asp-action="Index">Kategorije</a>
-                </li>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    @if (User.IsInRole(Utilities.USER_ADMIN_ROLE))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Admin" asp-controller="Categories" asp-action="Index">Kategorije</a>
+                        </li>
+                    }
+                }
+
 
             </ul>
             <partial name="_LoginPartial" />
