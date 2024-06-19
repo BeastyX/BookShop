@@ -17,6 +17,7 @@
     <div class="container">
         <main role="main" class="pb-3">
             <partial name="_Notifications" />
+            <partial name="_SweetConfirmations" />
             @RenderBody()
         </main>
     </div>
@@ -29,6 +30,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.11.1/dist/sweetalert2.all.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

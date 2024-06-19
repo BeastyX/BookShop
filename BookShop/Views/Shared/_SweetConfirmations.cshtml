@@ -1,0 +1,66 @@
+﻿<script>
+    function confirmDelete(e) {
+        e.preventDefault();
+
+        Swal.fire({
+
+            title: 'Upozorenje',
+            text: 'Sigurno želiš da obrišeš?',
+            icon: 'error',
+
+            showConfirmButton: true,
+            confirmButtonText: 'Obriši!',
+            confirmButtonColor: '#e74c3c',
+
+            showCancelButton: true,
+            cancelButtonText: 'Ne',
+            cancelButtonColor: '#95a5a6'
+
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const mojaForma = e.target;
+                mojaForma.submit();
+            }
+        });
+    }
+
+    function confirmOrder(e) {
+        e.preventDefault();
+
+        Swal.fire({
+
+            title: 'Sigurno naručuješ?',
+            text: 'Imaš malo knjiga u korpi. Naruči bar @Utilities.ORDER_CONFIRMATION_NUM_ITEMS knjige kako bi ti troškovi transporta bili manji...',
+            icon: 'info',
+
+            showConfirmButton: true,
+            confirmButtonText: 'Naruči!',
+            confirmButtonColor: '#18bc9c',
+
+            showCancelButton: true,
+            cancelButtonText: 'Ne',
+            cancelButtonColor: '#95a5a6'
+
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const mojaForma = e.target;
+                mojaForma.submit();
+            }
+        });
+    }
+
+    function showAddToCartDisabledForAdmin() {
+        // e.preventDefault();
+
+        Swal.fire({
+
+            title: 'Zabranjen pristup!',
+            text: 'Admin ne može da dodaje knjige u korpu, to je samo za korinike. Za menadžment koristiti linkove u NavBar-u!',
+            icon: 'warning',
+
+            showConfirmButton: true,
+            confirmButtonText: '&nbsp;&nbsp;&nbsp; E važi 🙂 &nbsp;&nbsp;&nbsp;',
+            // confirmButtonColor: '#18bc9c',
+        });
+    }
+</script>
