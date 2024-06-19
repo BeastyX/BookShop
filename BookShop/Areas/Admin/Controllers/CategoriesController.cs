@@ -92,4 +92,21 @@ public class CategoriesController : Controller
 
         return View();
     }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Delete(int id)
+    {
+        if (id <= 6)
+            return RedirectToAction(nameof(Index));
+
+        var item = _context.Categories.FirstOrDefault(c => c.Id == id);
+        if (item == null)
+            return NotFound();
+
+        _context.Categories.Remove(item);
+        _context.SaveChanges();
+
+        return RedirectToAction(nameof(Index));
+    }
 }
