@@ -1,34 +1,154 @@
-﻿@model List<Category>
+﻿@model CategoryIndexViewModel
 
 @{
     ViewData["Title"] = "Kategorije";
 }
 
-<a class="btn btn-danger my-4" asp-action="Create">Ovo je dugmence za novu kategorijicu</a>
+<!-- Big Card -->
+<div class="card shadow border-0 mt-4">
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>@Html.DisplayNameFor(model => model[0].Name)</th>
-            <th>Alati</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Id</td>
-                <td>@item.Name</td>
-                <td>
-                    <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-secondary">Izmeni</a>
-                    <form method="post" asp-action="Delete" asp-route-id="@item.Id" onsubmit=@Utilities.DELETE_CONFIRMATION_ONSUBMIT_FORM_CALL>
-                        @Html.AntiForgeryToken()
-                        <input asp-for="@item.Id" type="hidden" />
-                        <button type="submit" class="btn btn-danger">Obrisi</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <!-- Header -->
+    <div class="card-header bg-dark bg-gradient py-2 mb-3">
+        <div class="col-12 text-center text-white">
+            <h3>@ViewData["Title"]</h3>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="card-body p-4">
+
+        <div class="row mb-4">
+            <div class="col col-md-5 col-lg-4">
+                <form asp-action="Index" method="GET">
+                    <div class="form-floating mb-3">
+                        <input type="search" class="form-control shadow border-0" id="searchBox" placeholder="name" value='@ViewData["CurrentSearch"]' name="searchString">
+                        <label for="searchBox"><i class="bi bi-search me-2"></i>Filter</label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col align-content-end pb-3">
+                <div class="text-end">
+                    <a asp-action="Create" class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-3"></i>Nova Kategorija
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col" class="bg-light">
+                        <a asp-action="Index" asp-route-sortOrder="@ViewData["IdSortParameter"]" asp-route-searchString='@ViewData["CurrentSearch"]' asp-route-pageNumber="@(Model.PageNumber)">
+                            @Html.DisplayNameFor(model => model.Categories!.First().Id)
+                            @if (string.IsNullOrEmpty((string)ViewData["CurrentSort"]!))
+                            {
+                                <i class="bi bi-caret-up-fill"></i>
+                            }
+                            else if ((string)ViewData["CurrentSort"]! == "id_desc")
+                            {
+                                <i class="bi bi-caret-down-fill"></i>
+                            }
+                        </a>
+                    </th>
+                    <th scope="col" class="bg-light w-50">
+                        <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParameter"]" asp-route-searchString='@ViewData["CurrentSearch"]' asp-route-pageNumber="@(Model.PageNumber)">
+                            @Html.DisplayNameFor(model => model.Categories!.First().Name)
+                            @if ((string)ViewData["CurrentSort"]! == "Name")
+                            {
+                                <i class="bi bi-caret-up-fill"></i>
+                            }
+                            else if ((string)ViewData["CurrentSort"]! == "name_desc")
+                            {
+                                <i class="bi bi-caret-down-fill"></i>
+                            }
+                        </a>
+                    </th>
+                    <th scope="col" class="bg-light">Alati</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model.Categories!)
+                {
+                    <tr>
+                        <td>
+                            @item.Id
+                        </td>
+
+                        <td>
+                            @item.Name
+                        </td>
+
+                        <td class="text-nowrap d-flex align-items-center">
+                            <a class="btn btn-primary btn-sm me-2 px-1 px-sm-2 px-md-4" asp-action="Update" asp-route-id="@item.Id"><i class="bi bi-pencil-square me-1 me-sm-2"></i>Izmeni</a>
+
+                            <form asp-action="Delete" asp-route-id="@item.Id" onsubmit=@Utilities.DELETE_CONFIRMATION_ONSUBMIT_FORM_CALL class="d-inline" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" asp-for="@item.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm px-1 px-sm-2 px-md-4">
+                                    <i class="bi bi-trash-fill me-1 me-sm-2"></i>Obriši
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- Paginacija -->
+        <nav class="mt-4">
+            <ul class="pagination">
+                @if (Model.HasPreviousPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-searchString="@ViewData["CurrentSearch"]">Prethodna</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">Prethodna</a>
+                    </li>
+                }
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-searchString="@ViewData["CurrentSearch"]">@i</a>
+                    </li>
+                }
+
+                @if (Model.HasNextPage)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-searchString="@ViewData["CurrentSearch"]">Sledeća</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">Sledeća</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var searchBox = document.getElementById('searchBox');
+
+            searchBox.addEventListener('input', function () {
+                if (searchBox.value === '') {
+                    searchBox.form.submit();
+                }
+            });
+        });
+    </script>
+}

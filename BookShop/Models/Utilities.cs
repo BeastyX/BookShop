@@ -11,6 +11,8 @@ public static class Utilities
 
     public const string USER_CUSTOMER_ROLE = "Customer";
 
+    public const int SEED_NUMBER_CATEGORIES = 6;
+    public const int NUMBER_CATEGORIES_PER_PAGE = 5;
     public const string DELETE_CONFIRMATION_ONSUBMIT_FORM_CALL = "event.preventDefault(); confirmDelete(event);";
     public const int ORDER_CONFIRMATION_NUM_ITEMS = 3;
 

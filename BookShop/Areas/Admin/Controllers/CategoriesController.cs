@@ -1,5 +1,6 @@
 ﻿using BookShop.Data;
 using BookShop.Models;
+using BookShop.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,11 +13,51 @@ public class CategoriesController : Controller
     private ApplicationDbContext _context;
     public CategoriesController(ApplicationDbContext context) => _context = context;
 
-    public IActionResult Index()
+    public IActionResult Index(string sortOrder, string searchString, int pageNumber = 1)
     {
-        var kategorije = _context.Categories.ToList();
+        ViewData["IdSortParameter"] = string.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
+        ViewData["NameSortParameter"] = sortOrder == "Name" ? "name_desc" : "Name";
+        ViewData["SearchFilter"] = searchString;
+        ViewData["CurrentSort"] = sortOrder;
+        ViewData["CurrentSearch"] = searchString;
 
-        return View(kategorije);
+        var categories = _context.Categories.AsEnumerable();
+
+        if (!string.IsNullOrEmpty(searchString))
+            categories = categories.Where(o => o.Name != null && o.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+
+        switch (sortOrder)
+        {
+            case "id_desc":
+                categories = categories.OrderByDescending(o => o.Id);
+                break;
+
+            case "Name":
+                categories = categories.OrderBy(o => o.Name);
+                break;
+
+            case "name_desc":
+                categories = categories.OrderByDescending(o => o.Name);
+                break;
+
+            default:
+                categories = categories.OrderBy(o => o.Id);
+                break;
+        }
+
+        //- Server-Side paginacija
+        int pageSize = Utilities.NUMBER_CATEGORIES_PER_PAGE; // Broj stavki po stranici
+        int totalItems = categories.Count();
+        var pagedCategories = categories.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+        var viewModel = new CategoryIndexViewModel
+        {
+            Categories = pagedCategories,
+            PageNumber = pageNumber,
+            TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize)
+        };
+
+        return View(viewModel);
     }
 
     [HttpGet]
@@ -70,7 +111,7 @@ public class CategoriesController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult UpdatePost(int id, Category model)
     {
-        if (id <= 6)
+        if (id <= Utilities.SEED_NUMBER_CATEGORIES)
         {
             TempData["Error"] = "Nije dozvoljena izmena predefinisanih kategorija!";
             return RedirectToAction(nameof(Index));
@@ -108,7 +149,7 @@ public class CategoriesController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Delete(int id)
     {
-        if (id <= 6)
+        if (id <= Utilities.SEED_NUMBER_CATEGORIES)
         {
             TempData["Error"] = "Nije dozvoljeno brisanje predefinisanih kategorija!";
             return RedirectToAction(nameof(Index));

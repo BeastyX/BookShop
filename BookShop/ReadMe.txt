@@ -20,3 +20,13 @@ Login / Register:
 Areas:
 - Admin area-u dodajemo desni klik na areas / Add / Area.
 - Dodajemo novo rutiranje pre default sa nazivom "Areas" i pattern-om "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+
+Klijentska Validicija:
+- U samom modelu atributi Required, EmailAddress...
+- U kombinaciji sa asp-validation-for="ime_Property" u samom View-u
+- Sve sto je u kontroleru nema veze sa klijentskom validacijom
+
+Serverska validacija:
+- Desava se kad klijent (Korisnik) klikne na Submit form i odlazi u odgovarajaucu akciju u kontroleru
+- U samoj akciji kontrolera vrsimo proveru submitovanih podataka
+- Npr. HttpPost za Create i Update.
