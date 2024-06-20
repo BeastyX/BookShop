@@ -13,10 +13,10 @@ public class CategoriesController : Controller
     private ApplicationDbContext _context;
     public CategoriesController(ApplicationDbContext context) => _context = context;
 
-    public IActionResult Index(string sortOrder, string searchString, int pageNumber = 1)
+    public IActionResult Index(string sortOrder = "id_asc", string searchString = "", int pageNumber = 1)
     {
-        ViewData["IdSortParameter"] = string.IsNullOrEmpty(sortOrder) ? "id_desc" : "";
-        ViewData["NameSortParameter"] = sortOrder == "Name" ? "name_desc" : "Name";
+        ViewData["IdSortParameter"] = sortOrder == "id_asc" ? "id_desc" : "id_asc";
+        ViewData["NameSortParameter"] = sortOrder == "name_asc" ? "name_desc" : "name_asc";
         ViewData["SearchFilter"] = searchString;
         ViewData["CurrentSort"] = sortOrder;
         ViewData["CurrentSearch"] = searchString;
@@ -28,11 +28,15 @@ public class CategoriesController : Controller
 
         switch (sortOrder)
         {
+            case "id_asc":
+                categories = categories.OrderBy(o => o.Id);
+                break;
+
             case "id_desc":
                 categories = categories.OrderByDescending(o => o.Id);
                 break;
 
-            case "Name":
+            case "name_asc":
                 categories = categories.OrderBy(o => o.Name);
                 break;
 

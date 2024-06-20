@@ -42,7 +42,7 @@
                     <th scope="col" class="bg-light">
                         <a asp-action="Index" asp-route-sortOrder="@ViewData["IdSortParameter"]" asp-route-searchString='@ViewData["CurrentSearch"]' asp-route-pageNumber="@(Model.PageNumber)">
                             @Html.DisplayNameFor(model => model.Categories!.First().Id)
-                            @if (string.IsNullOrEmpty((string)ViewData["CurrentSort"]!))
+                            @if ((string)ViewData["CurrentSort"]! == "id_asc")
                             {
                                 <i class="bi bi-caret-up-fill"></i>
                             }
@@ -55,7 +55,7 @@
                     <th scope="col" class="bg-light w-50">
                         <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParameter"]" asp-route-searchString='@ViewData["CurrentSearch"]' asp-route-pageNumber="@(Model.PageNumber)">
                             @Html.DisplayNameFor(model => model.Categories!.First().Name)
-                            @if ((string)ViewData["CurrentSort"]! == "Name")
+                            @if ((string)ViewData["CurrentSort"]! == "name_asc")
                             {
                                 <i class="bi bi-caret-up-fill"></i>
                             }
@@ -140,6 +140,7 @@
 
 @section Scripts
 {
+    @* Osvezi stranu kod filtriranja *@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var searchBox = document.getElementById('searchBox');
