@@ -166,6 +166,13 @@ public class CategoriesController : Controller
         if (item == null)
             return NotFound();
 
+        var hasRelatedBooks = _context.Books.Any(b => b.CategoryId == id);
+        if (hasRelatedBooks)
+        {
+            TempData["Error"] = "Nije dozvoljeno brisanje kategorije koja je već povezana sa knjigama!";
+            return RedirectToAction(nameof(Index));
+        }
+
         _context.Categories.Remove(item);
         _context.SaveChanges();
 
