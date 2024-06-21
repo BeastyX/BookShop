@@ -19,11 +19,12 @@
 
         <div class="row mb-4">
             <div class="col col-md-5 col-lg-4">
-                <form asp-action="Index" method="GET">
-                    <div class="form-floating mb-3">
+                <form asp-action="Index" method="GET" class="d-flex align-items-center">
+                    <div class="form-floating me-2 flex-grow-1">
                         <input type="search" class="form-control shadow border-0" id="searchBox" placeholder="name" value='@Model.CurrentSearch' name="searchString">
                         <label for="searchBox"><i class="bi bi-search me-2"></i>Filter</label>
                     </div>
+                    <button type="submit" class="btn btn-success ms-1"><i class="bi bi-search"></i></button>
                 </form>
             </div>
 
