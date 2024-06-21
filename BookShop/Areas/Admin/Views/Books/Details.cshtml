@@ -1,0 +1,67 @@
+﻿@model Book
+
+@{
+    ViewData["Title"] = "Detalji Knjige";
+}
+
+<partial name="_BackButton" />
+
+<!-- Big Card -->
+<div class="card shadow border-0 mt-4">
+
+    <!-- Header -->
+    <div class="card-header bg-dark bg-gradient py-2 mb-3">
+        <div class="col-12 text-center text-white">
+            <h3>@ViewData["Title"]</h3>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="card-body p-4">
+
+        <div class="row">
+            <div class="col-md-8 order-2 order-md-1">
+                <div class="form-floating col-12 mb-4">
+                    <input asp-for="Id" class="form-control shadow border-0" readonly />
+                    <label asp-for="Id"></label>
+                </div>
+
+                <div class="form-floating col-12 mb-4">
+                    <input asp-for="Title" class="form-control shadow border-0" readonly />
+                    <label asp-for="Title"></label>
+                </div>
+
+                <div class="form-floating col-12 mb-4">
+                    <textarea asp-for="Description" class="form-control shadow border-0" placeholder="Description" style="height: 10em;" readonly></textarea>
+                    <label asp-for="Description"></label>
+                </div>
+
+                <div class="form-floating col-12 mb-4">
+                    <input asp-for="Author" class="form-control shadow border-0" readonly />
+                    <label asp-for="Author"></label>
+                </div>
+
+                <div class="form-floating col-12 mb-4">
+                    <input asp-for="Price" class="form-control shadow border-0" value="@Utilities.GetPriceInDinars(Model.Price)" readonly />
+                    <label asp-for="Price"></label>
+                </div>
+
+                <div class="form-floating col-12 mb-4">
+                    <input asp-for="Category!.Name" class="form-control shadow border-0" readonly />
+                    <label asp-for="Category"></label>
+                </div>
+            </div>
+
+            <div class="col mb-4 order-1 order-md-2">
+                <img src="@Model.CoverImagePath" class="img-fluid w-100 rounded-4 border border-secondary-subtle p-2 shadow" />
+            </div>
+        </div>
+
+        <!-- Bottom Buttons -->
+        <div class="row mt-5">
+            <div class="col-6 col-lg-3">
+                <a class="btn btn-primary container-fluid" asp-action="Edit" asp-route-id="@Model?.Id"><i class="bi bi-pencil-square me-2"></i>Izmeni</a>
+            </div>
+        </div>
+    </div>
+</div>
