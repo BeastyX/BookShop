@@ -1,0 +1,33 @@
+﻿<script>
+    $(document).ready(function () {
+        var table = $('#@Utilities.DATA_TABLE_NAME').DataTable({
+            stateSave: true,
+            stateSaveCallback: function (settings, data) {
+                sessionStorage.setItem('datatable-state', JSON.stringify(data));
+            },
+            stateLoadCallback: function (settings) {
+                return JSON.parse(sessionStorage.getItem('datatable-state'));
+            },
+            language: {
+                lengthMenu: '_MENU_ &nbsp;&nbsp;Redova po strani',
+                search: 'Filter:&nbsp;&nbsp;',
+                info: 'Prikaz _START_-_END_ od ukupno _TOTAL_ redova'
+            },
+            order: [],
+            columnDefs: [{
+                "targets": 'no-sort',
+                "orderable": false,
+            }],
+            lengthMenu: [5, 10, 15, 20, 50, 100],
+            pageLength: 15
+        });
+
+        // Provera da li je stranica učitana direktno ili preko back dugmeta
+        var entries = performance.getEntriesByType("navigation");
+        if (entries.length && entries[0].type === "navigate") {
+            table.state.clear();
+            sessionStorage.removeItem('datatable-state');
+            table.draw();
+        }
+    });
+</script>

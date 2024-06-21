@@ -1,4 +1,4 @@
-﻿using BookShop.Data;
+using BookShop.Data;
 using BookShop.Models;
 using BookShop.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -23,27 +23,29 @@ public class BooksController : Controller
     }
 
 
-    // GET: Books
     public IActionResult Index()
     {
-        var items = _context.Books.Include(o => o.Category);
+        var items = _context.Books
+            .Include(book => book.Category);
+
         return View(items);
     }
 
-    // GET: Books/Details/5
     public IActionResult Details(int? id)
     {
         if (id == null)
             return NotFound();
 
-        var itemFromDB = _context.Books.Include(o => o.Category).FirstOrDefault(o => o.Id == id);
+        var itemFromDB = _context.Books
+            .Include(book => book.Category)
+            .FirstOrDefault(book => book.Id == id);
+
         if (itemFromDB == null)
             return NotFound();
 
         return View(itemFromDB);
     }
 
-    // GET: Books/Create
     public IActionResult Create()
     {
         var bookViewModel = new BookViewModel
@@ -55,13 +57,12 @@ public class BooksController : Controller
         return View(bookViewModel);
     }
 
-    // POST: Books/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Create(BookViewModel viewModel)
     {
         //- Skini spaces na pocetku i na kraju
-        viewModel.Book.Title = viewModel.Book?.Title?.Trim();
+        viewModel.Book.Title = viewModel.Book.Title.Trim();
 
         //- Server side validation
         var itemExists = _context.Books.AsEnumerable().Any(o => string.Equals(o.Title, viewModel.Book?.Title, StringComparison.OrdinalIgnoreCase));
@@ -87,7 +88,6 @@ public class BooksController : Controller
         return View(viewModel);
     }
 
-    // GET: Books/Edit/5
     public IActionResult Edit(int? id)
     {
         if (id is null or 0)
@@ -106,7 +106,6 @@ public class BooksController : Controller
         return View(bookViewModel);
     }
 
-    // POST: Books/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Edit(int id, BookViewModel viewModel)
@@ -121,7 +120,7 @@ public class BooksController : Controller
             return NotFound();
 
         //- Skini spaces na pocetku i na kraju
-        viewModel.Book.Title = viewModel.Book.Title?.Trim();
+        viewModel.Book.Title = viewModel.Book.Title.Trim();
 
         if (ModelState.IsValid)
         {
@@ -142,20 +141,6 @@ public class BooksController : Controller
         return View(viewModel);
     }
 
-    // GET: Books/Delete/5
-    public IActionResult Delete(int? id)
-    {
-        if (id is null or 0)
-            return NotFound();
-
-        var itemFromDB = _context.Books.FirstOrDefault(o => o.Id == id);
-        if (itemFromDB == null)
-            return NotFound();
-
-        return View(itemFromDB);
-    }
-
-    // POST: Books/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public IActionResult DeleteConfirmed(int id)
@@ -169,8 +154,6 @@ public class BooksController : Controller
         var itemFromDB = _context.Books.FirstOrDefault(o => o.Id == id);
         if (itemFromDB == null)
             return NotFound();
-
-        // todo: proveri da li je povezana sa externim bazama pre nego sto obrises
 
         DeleteOldImageIfExists(itemFromDB);
 
