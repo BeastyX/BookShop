@@ -13,14 +13,8 @@ public class CategoriesController : Controller
     private ApplicationDbContext _context;
     public CategoriesController(ApplicationDbContext context) => _context = context;
 
-    public IActionResult Index(string sortOrder = "id_asc", string searchString = "", int pageNumber = 1)
+    public IActionResult Index(string sortOrder = CategoryIndexViewModel.SORT_ID_ASC, string searchString = "", int pageNumber = 1)
     {
-        ViewData["IdSortParameter"] = sortOrder == "id_asc" ? "id_desc" : "id_asc";
-        ViewData["NameSortParameter"] = sortOrder == "name_asc" ? "name_desc" : "name_asc";
-        ViewData["SearchFilter"] = searchString;
-        ViewData["CurrentSort"] = sortOrder;
-        ViewData["CurrentSearch"] = searchString;
-
         var categories = _context.Categories.AsEnumerable();
 
         if (!string.IsNullOrEmpty(searchString))
@@ -28,19 +22,19 @@ public class CategoriesController : Controller
 
         switch (sortOrder)
         {
-            case "id_asc":
+            case CategoryIndexViewModel.SORT_ID_ASC:
                 categories = categories.OrderBy(o => o.Id);
                 break;
 
-            case "id_desc":
+            case CategoryIndexViewModel.SORT_ID_DESC:
                 categories = categories.OrderByDescending(o => o.Id);
                 break;
 
-            case "name_asc":
+            case CategoryIndexViewModel.SORT_NAME_ASC:
                 categories = categories.OrderBy(o => o.Name);
                 break;
 
-            case "name_desc":
+            case CategoryIndexViewModel.SORT_NAME_DESC:
                 categories = categories.OrderByDescending(o => o.Name);
                 break;
 
@@ -58,7 +52,16 @@ public class CategoriesController : Controller
         {
             Categories = pagedCategories,
             PageNumber = pageNumber,
-            TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize)
+            TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize),
+            CurrentSearch = searchString,
+            CurrentSort = sortOrder,
+            IdSortParameter = sortOrder == CategoryIndexViewModel.SORT_ID_ASC
+                ? CategoryIndexViewModel.SORT_ID_DESC 
+                : CategoryIndexViewModel.SORT_ID_ASC,
+
+            NameSortParameter = sortOrder == CategoryIndexViewModel.SORT_NAME_ASC 
+                ? CategoryIndexViewModel.SORT_NAME_DESC 
+                : CategoryIndexViewModel.SORT_NAME_ASC
         };
 
         return View(viewModel);

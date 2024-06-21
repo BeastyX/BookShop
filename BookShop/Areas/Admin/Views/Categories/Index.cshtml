@@ -21,7 +21,7 @@
             <div class="col col-md-5 col-lg-4">
                 <form asp-action="Index" method="GET">
                     <div class="form-floating mb-3">
-                        <input type="search" class="form-control shadow border-0" id="searchBox" placeholder="name" value='@ViewData["CurrentSearch"]' name="searchString">
+                        <input type="search" class="form-control shadow border-0" id="searchBox" placeholder="name" value='@Model.CurrentSearch' name="searchString">
                         <label for="searchBox"><i class="bi bi-search me-2"></i>Filter</label>
                     </div>
                 </form>
@@ -40,26 +40,26 @@
             <thead>
                 <tr>
                     <th scope="col" class="bg-light">
-                        <a asp-action="Index" asp-route-sortOrder="@ViewData["IdSortParameter"]" asp-route-searchString='@ViewData["CurrentSearch"]' asp-route-pageNumber="@(Model.PageNumber)">
+                        <a asp-action="Index" asp-route-sortOrder="@Model.IdSortParameter" asp-route-searchString='@Model.CurrentSearch' asp-route-pageNumber="@(Model.PageNumber)">
                             @Html.DisplayNameFor(model => model.Categories!.First().Id)
-                            @if ((string)ViewData["CurrentSort"]! == "id_asc")
+                            @if (@Model.CurrentSort == CategoryIndexViewModel.SORT_ID_ASC)
                             {
                                 <i class="bi bi-caret-up-fill"></i>
                             }
-                            else if ((string)ViewData["CurrentSort"]! == "id_desc")
+                            else if (@Model.CurrentSort == CategoryIndexViewModel.SORT_ID_DESC)
                             {
                                 <i class="bi bi-caret-down-fill"></i>
                             }
                         </a>
                     </th>
                     <th scope="col" class="bg-light w-50">
-                        <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParameter"]" asp-route-searchString='@ViewData["CurrentSearch"]' asp-route-pageNumber="@(Model.PageNumber)">
+                        <a asp-action="Index" asp-route-sortOrder="@Model.NameSortParameter" asp-route-searchString='@Model.CurrentSearch' asp-route-pageNumber="@(Model.PageNumber)">
                             @Html.DisplayNameFor(model => model.Categories!.First().Name)
-                            @if ((string)ViewData["CurrentSort"]! == "name_asc")
+                            @if (@Model.CurrentSort == CategoryIndexViewModel.SORT_NAME_ASC)
                             {
                                 <i class="bi bi-caret-up-fill"></i>
                             }
-                            else if ((string)ViewData["CurrentSort"]! == "name_desc")
+                            else if (@Model.CurrentSort == CategoryIndexViewModel.SORT_NAME_DESC)
                             {
                                 <i class="bi bi-caret-down-fill"></i>
                             }
@@ -103,7 +103,7 @@
                 @if (Model.HasPreviousPage)
                 {
                     <li class="page-item">
-                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-searchString="@ViewData["CurrentSearch"]">Prethodna</a>
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-sortOrder="@Model.CurrentSort" asp-route-searchString="@Model.CurrentSearch">Prethodna</a>
                     </li>
                 }
                 else
@@ -116,14 +116,14 @@
                 @for (int i = 1; i <= Model.TotalPages; i++)
                 {
                     <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-searchString="@ViewData["CurrentSearch"]">@i</a>
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-sortOrder="@Model.CurrentSort" asp-route-searchString="@Model.CurrentSearch">@i</a>
                     </li>
                 }
 
                 @if (Model.HasNextPage)
                 {
                     <li class="page-item">
-                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-searchString="@ViewData["CurrentSearch"]">Sledeća</a>
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-sortOrder="@Model.CurrentSort" asp-route-searchString="@Model.CurrentSearch">Sledeća</a>
                     </li>
                 }
                 else
