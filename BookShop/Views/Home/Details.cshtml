@@ -1,0 +1,72 @@
+﻿@model Book
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<partial name="_BackButton" />
+
+<!-- Big Card -->
+<div class="card shadow border-0 mt-4">
+
+    <!-- Header -->
+    <div class="card-header bg-dark bg-gradient py-2 mb-3">
+        <div class="col-12 text-center text-white">
+            <h2 class="fw-bolder text-uppercase">@ViewData["Title"]</h2>
+            <h4 class="">- @Model.Author -</h4>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="card-body p-4">
+
+        <div class="row">
+            <div class="col mb-4">
+                <img src="@Model.CoverImagePath" class="img-fluid w-100 rounded-4 border border-secondary-subtle p-2 shadow" />
+            </div>
+
+            <div class="col-md-8">
+                <span class="badge rounded-3 bg-warning fs-5 mb-4">@Model.Category?.Name</span>
+
+                <table class="table table-borderless mb-4 fs-5">
+                    <tr>
+                        <th>Naslov:</th>
+                        <td class="w-100">@Model.Title</td>
+                    </tr>
+                    <tr>
+                        <th>Autor:</th>
+                        <td>@Model.Author</td>
+                    </tr>
+                    <tr>
+                        <th>Cena:</th>
+                        <td>@Utilities.GetPriceInDinars(Model.Price)</td>
+                    </tr>
+                </table>
+
+                <h5 class="mb-5 fst-italic">@Model.Description</h5>
+
+                <div class="col col-md-10 col-lg-7">
+                    @if (User.IsInRole(Utilities.USER_ADMIN_ROLE))
+                    {
+                    //- Admin ne ubacuje u korpu
+                        <button class="btn btn-primary btn-lg container-fluid" onclick="@Utilities.ALERT_ADMIN_CANT_ADD_TO_CART">
+                            <i class="bi bi-cart4 me-2"></i>Ubaci u korpu
+                        </button>
+                    }
+                    else
+                    {
+                        //- Samo customer moze da ubaci u korpu
+                        <form asp-action="AddToCart" asp-controller="ShoppingCart" asp-route-bookId="@Model.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" asp-for="@Model.Id" />
+
+                            <button type="submit" class="btn btn-primary btn-lg container-fluid">
+                                <i class="bi bi-cart4 me-2"></i>Ubaci u korpu
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

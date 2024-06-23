@@ -1,8 +1,56 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model List<Book>
+
+@{
+    ViewData["Title"] = "Book Shop";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-gap-4 mt-5">
+
+    @foreach (var book in Model)
+    {
+        <div class="col">
+            <div class="card border-0 shadow rounded-3" id="book-card" onclick="window.location='home/details/@book.Id'" style="cursor:pointer">
+
+                <div class="card-body">
+
+                    <div class="ratio" style="--bs-aspect-ratio: 153.8%;">
+                        <img src="@book.CoverImagePath" class="rounded-2 object-fit-cover" />
+                    </div>
+
+                    <div>
+                        <p class="card-title h5 text-primary text-center text-uppercase mt-3 text-truncate"><b>@book.Title</b></p>
+                        <p class="card-title h5 text-secondary text-center text-truncate"><b>@book.Author</b></p>
+                        <p class="card-title h5 text-info text-center"><b>@Utilities.GetPriceInDinars(book.Price)</b></p>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    }
 </div>
+
+@section Scripts
+{
+    <script>
+
+        // Snimam poziciju scroll-a na stranici da kad se vratim na nju, automatski skroluje na istu poziciju
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Restore scroll position on page load
+            const scrollPosition = localStorage.getItem('scrollPosition');
+            if (scrollPosition) {
+                window.scrollTo(0, scrollPosition);
+                localStorage.removeItem('scrollPosition');
+            }
+
+            // Save scroll position before navigating away
+            const bookCards = document.querySelectorAll("#book-card");
+            bookCards.forEach(card => {
+                card.addEventListener("click", function () {
+                    localStorage.setItem('scrollPosition', window.scrollY);
+                });
+            });
+        });
+    </script>
+}

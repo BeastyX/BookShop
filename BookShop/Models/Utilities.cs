@@ -20,6 +20,8 @@ public static class Utilities
     public const string DELETE_CONFIRMATION_ONSUBMIT_FORM_CALL = "event.preventDefault(); confirmDelete(event);";
     public const int ORDER_CONFIRMATION_NUM_ITEMS = 3;
 
+    public const string ALERT_ADMIN_CANT_ADD_TO_CART = "showAddToCartDisabledForAdmin();";
+
     public const string UPLOAD_IMAGE_PATH = @"images\uploads";
     public const string DATA_TABLE_NAME = "mydatatable"; // Za DataTables plugin
 
