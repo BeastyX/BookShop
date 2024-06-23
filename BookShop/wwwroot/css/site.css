@@ -20,3 +20,22 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* datatables */
+input#dt-search-0.dt-input {
+    box-shadow: var(--bs-box-shadow-sm);
+    border: 1px solid rgb(222, 226, 230);
+}
+
+.dt-input#dt-search-0:focus {
+    border: 0;
+}
+
+.dt-input#dt-length-0 {
+    box-shadow: var(--bs-box-shadow-sm);
+    border: 1px solid rgb(222, 226, 230);
+}
+
+.dt-layout-row {
+    margin-bottom: 10px;
+}
