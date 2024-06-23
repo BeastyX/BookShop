@@ -20,6 +20,21 @@
                             <a class="nav-link" asp-area="Admin" asp-controller="Categories" asp-action="Index">Kategorije</a>
                         </li>
                     }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Orders" asp-action="Index">Narudžbine</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="ShoppingCart" asp-action="Index">
+                                <i class="bi bi-cart4 h4 position-relative">
+                                    <span id="cart-item-count" class="shopping-cart-badge bg-success text-white"></span>
+                                </i>
+                            </a>
+                        </li>
+                    }
+
                 }
 
 
