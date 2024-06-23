@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Order>
+
+@{
+    ViewData["Title"] = "Narudžbine";
+}
+
+@if (!Model.Any())
+{
+    <!-- Big Card -->
+    <div class="card shadow border-0 mt-4 mx-auto col-10 col-md-8 col-lg-6">
+
+        <!-- Header -->
+        <div class="card-header bg-warning bg-gradient py-2 mb-3">
+            <div class="col-12 text-center text-white">
+                <h3>@ViewData["Title"]</h3>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="card-body p-4 text-center">
+            <h5 class="text-center">Nemate narudžbine!</h5>
+            <a class="btn btn-primary mt-3 px-5 py-2" asp-action="Index" asp-controller="Home"><i class="bi bi-arrow-left-circle me-2"></i>Glavna strana</a>
+        </div>
+    </div>
+
+    return;
+}
+
+<partial name="_BackButton" />
+
+<!-- Big Card -->
+<div class="card shadow border-0 mt-4">
+
+    <!-- Header -->
+    <div class="card-header bg-dark bg-gradient py-2 mb-3">
+        <div class="col-12 text-center text-white">
+            <h3>@ViewData["Title"]</h3>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="card-body p-4">
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col" class="bg-light">@Html.DisplayNameFor(model => model.OrderDate)</th>
+                    <th scope="col" class="bg-light text-center">Broj knjiga</th>
+                    <th scope="col" class="bg-light text-end pe-3">Ukupna cena</th>
+                    <th scope="col" class="bg-light text-end pe-3">Alati</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr onclick="window.location='orders/update/@item.Id'" style="cursor: pointer;">
+                        <td>@Utilities.GetDateInSerbian(@item.OrderDate)</td>
+                        <td class="text-center">@item.OrderItems?.Count</td>
+                        <td class="text-end pe-3">@Utilities.GetPriceInDinars(@item.OrderItems!.Sum(o => o.Price))</td>
+
+                        <td class="col-2 text-end">
+                            <form asp-action="Delete" asp-route-id="@item.Id" onsubmit=@Utilities.DELETE_CONFIRMATION_ONSUBMIT_FORM_CALL class="d-inline" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" asp-for="@item.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm px-1 px-sm-2 px-md-4" onclick="event.stopPropagation();">
+                                    <i class="bi bi-trash-fill me-0 me-md-2"></i><span class="d-block d-sm-block d-md-inline">Obriši</span>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>

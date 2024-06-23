@@ -1,0 +1,112 @@
+﻿@model OrderViewModel
+
+@{
+    ViewData["Title"] = "Narudžbina";
+}
+
+<a class="btn btn-secondary my-2 px-4 py-2" asp-area="" asp-controller="Orders" asp-action="Index"><i class="bi bi-arrow-left-circle me-2"></i>Prethodna stranica</a>
+
+<!-- Big Card -->
+<div class="card shadow border-0 mt-4">
+
+    <!-- Header -->
+    <div class="card-header bg-dark bg-gradient py-2 mb-3">
+        <div class="col-12 text-center text-white">
+            <h3>@ViewData["Title"]</h3>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="card-body p-4">
+
+        <div class="text-center mb-4">
+            <label class="h5 me-3 fw-bolder">Datum narudžbine:</label>
+            <label class="h5 text-info me-lg-3 fw-bolder">@Utilities.GetDateInSerbian(Model.Order.OrderDate)</label>
+        </div>
+
+        <table class="table table-hover">
+            <tbody>
+                @foreach (var item in Model.Order.OrderItems!)
+                {
+                    var isMarkedForDelete = Model.OrderItemsMarkedForDeletion.Contains(item.Id);
+
+                    <tr class="align-middle order-item-row" data-item-id="@item.Id" style="@(isMarkedForDelete ? "--bs-table-bg: #e74c3c25 !important;" : string.Empty)">
+                        <td class="col-2 col-md-1">
+                            <div class="ratio" style="--bs-aspect-ratio: 153.8%;">
+                                <img src="@item.Book?.CoverImagePath" class="rounded-1 object-fit-cover" />
+                            </div>
+                        </td>
+
+                        <td>
+                            <h5 class="text-uppercase text-primary fw-bolder ms-2">@item.Book!.Title</h5>
+                            <h5 class="text-primary ms-2">@item.Book!.Author</h5>
+                        </td>
+
+                        <td class="text-end"><h5 class="text-info me-lg-3">@Utilities.GetPriceInDinars(@item.Price)</h5></td>
+
+                        <td class="col-2 text-end">
+                            <form method="post" asp-action="Update" asp-route-markedForDeleteId="@item.Id">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" asp-for="@Model.Order.Id" />
+
+                                @foreach (var id in Model.OrderItemsMarkedForDeletion)
+                                {
+                                    <input type="hidden" name="OrderItemsMarkedForDeletion" value="@id" />
+                                }
+
+                                <div class="d-grid ms-0 ms-md-0 ms-lg-4 me-0 me-md-0 me-lg-2 border border-1">
+                                    @if (isMarkedForDelete)
+                                    {
+                                        <button type="submit" class="btn btn-success btn-sm px-1 px-sm-2 px-md-4">
+                                            <i class="bi bi-arrow-counterclockwise me-0 me-md-2"></i><span class="d-block d-sm-block d-md-inline">Vrati</span>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="submit" class="btn btn-danger btn-sm px-1 px-sm-2 px-md-4">
+                                            <i class="bi bi-trash-fill me-0 me-md-2"></i><span class="d-block d-sm-block d-md-inline">Obriši</span>
+                                        </button>
+                                    }
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="container mb-4">
+            <div class="row mt-5">
+                <div class="col text-end">
+                    <label class="h5 me-3 fw-bolder">Ukupna cena:</label>
+                    <label class="h5 text-info me-lg-3 fw-bolder">@Utilities.GetPriceInDinars(Model.Order.OrderItems!.Sum(o => o.Price))</label>
+                </div>
+                <div class="col-2"></div>
+            </div>
+
+            <div class="row my-5 justify-content-center">
+                <div class="col col-md-8 col-lg-6 col-xl-5">
+
+                    @{
+                        var anyItemMarkedForDelete = Model.OrderItemsMarkedForDeletion.Count > 0;
+                    }
+
+                    <form asp-action="UpdateConfirmed" method="post">
+                        @Html.AntiForgeryToken()
+                        @* <input type="hidden" id="orderId" name="orderId" value="@Model.Order.Id" /> *@
+                        <input type="hidden" asp-for="@Model.Order.Id" />
+
+                        @foreach (var id in Model.OrderItemsMarkedForDeletion)
+                        {
+                            <input type="hidden" name="OrderItemsMarkedForDeletion" value="@id" />
+                        }
+
+                        <button id="saveChangesBtn" type="submit" class="btn btn-primary btn-lg container-fluid" style="display: @(anyItemMarkedForDelete ? "block" : "none");">
+                            <i class="bi bi-pencil-square me-2"></i>Sačuvaj izmene
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
