@@ -1,0 +1,23 @@
+﻿<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        function updateCartCount() {
+            $.ajax({
+                url: '@Url.Action("GetCartItemCount", "ShoppingCart")',
+                type: 'GET',
+                success: function (data) {
+                    if (!isNaN(data) && Number.isInteger(parseFloat(data))) {
+                        $('#cart-item-count').text(data);
+                    } else {
+                        $('#cart-item-count').text(0);
+                    }
+                },
+                error: function () {
+                    $('#cart-item-count').text(0);
+                }
+            });
+        }
+
+        updateCartCount();
+    });
+</script>

@@ -18,6 +18,7 @@ public static class Utilities
     public const int NUMBER_CATEGORIES_PER_PAGE = 5;
 
     public const string DELETE_CONFIRMATION_ONSUBMIT_FORM_CALL = "event.preventDefault(); confirmDelete(event);";
+    public const string ORDER_CONFIRMATION_ONSUBMIT_FORM_CALL = "event.preventDefault(); confirmOrder(event);";
     public const int ORDER_CONFIRMATION_NUM_ITEMS = 3;
 
     public const string ALERT_ADMIN_CANT_ADD_TO_CART = "showAddToCartDisabledForAdmin();";

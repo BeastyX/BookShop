@@ -1,0 +1,113 @@
+﻿@model ShoppingCartViewModel
+
+@{
+    ViewData["Title"] = "Korpa";
+}
+
+@if (!Model.ShoppingCartItems.Any())
+{
+    <!-- Big Card -->
+    <div class="card shadow border-0 mt-4 mx-auto col-10 col-md-8 col-lg-6">
+
+        <!-- Header -->
+        <div class="card-header bg-warning bg-gradient py-2 mb-3">
+            <div class="col-12 text-center text-white">
+                <h3>@ViewData["Title"]</h3>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="card-body p-4 text-center">
+            <h5 class="text-center">Vaša korpa je prazna!</h5>
+            <a class="btn btn-primary mt-3 px-5 py-2" asp-action="Index" asp-controller="Home"><i class="bi bi-arrow-left-circle me-2"></i>Glavna strana</a>
+        </div>
+    </div>
+
+    return;
+}
+
+<!-- Back Button -->
+<a class="btn btn-secondary my-2 px-4 py-2" asp-action="Index" asp-controller="Home"><i class="bi bi-arrow-left-circle me-2"></i>Nastavi kupovinu</a>
+
+<!-- Big Card -->
+<div class="card shadow border-0 mt-4">
+
+    <!-- Header -->
+    <div class="card-header bg-dark bg-gradient py-2 mb-3">
+        <div class="col-12 text-center text-white">
+            <h3>@ViewData["Title"]</h3>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="card-body p-4">
+
+        <table class="table table-hover">
+            <tbody>
+                @foreach (var item in Model.ShoppingCartItems)
+                {
+                    <tr class="align-middle">
+                        <td class="col-2 col-md-1">
+                            <div class="ratio" style="--bs-aspect-ratio: 153.8%;">
+                                <img src="@item.Book?.CoverImagePath" class="rounded-1 object-fit-cover" />
+                            </div>
+                        </td>
+
+                        <td>
+                            <h5 class="text-uppercase text-primary fw-bolder ms-2">@item.Book!.Title</h5>
+                            <h5 class="text-primary ms-2">@item.Book!.Author</h5>
+                            @* <p class="text-secondary fst-italic">@item.Book!.Description</p> *@
+                        </td>
+
+                        <td class="text-end"><h5 class="text-info me-lg-3">@Utilities.GetPriceInDinars(@item.Price)</h5></td>
+
+                        <td class="col-2 text-end">
+                            <form asp-action="Delete" asp-route-id="@item.Id" onsubmit=@Utilities.DELETE_CONFIRMATION_ONSUBMIT_FORM_CALL class="d-inline" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" asp-for="@item.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm px-1 px-sm-2 px-md-4" onclick="event.stopPropagation();">
+                                    <i class="bi bi-trash-fill me-0 me-md-2"></i><span class="d-block d-sm-block d-md-inline">Obriši</span>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="container">
+            <div class="row mt-5">
+                <div class="col text-end">
+                    <label class="h5 me-3 fw-bolder">@Html.DisplayNameFor(o => Model.TotalPrice):</label>
+                    <label class="h5 text-info me-lg-3 fw-bolder">@Utilities.GetPriceInDinars(Model.TotalPrice)</label>
+                </div>
+                <div class="col-2"></div>
+            </div>
+
+            <div class="row my-5 justify-content-center">
+                <div class="col col-md-8 col-lg-6 col-xl-5">
+                    @if (Model.ShoppingCartItems.Count < Utilities.ORDER_CONFIRMATION_NUM_ITEMS)
+                    {
+                        //- Pokazi konfirmaciju jer ima malo proizvoda u korpi
+                        <form asp-action="CreateOrder" asp-controller="Orders" onsubmit=@Utilities.ORDER_CONFIRMATION_ONSUBMIT_FORM_CALL method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-primary btn-lg container-fluid">
+                                <i class="bi bi-currency-exchange me-2"></i>Naruči
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        //- Bez konfirmacije
+                        <form asp-action="CreateOrder" asp-controller="Orders" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-primary btn-lg container-fluid">
+                                <i class="bi bi-currency-exchange me-2"></i>Naruči
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -19,6 +19,12 @@
         <main role="main" class="pb-3">
             <partial name="_Notifications" />
             <partial name="_SweetConfirmations" />
+
+            @if (User.Identity?.IsAuthenticated == true && !User.IsInRole(Utilities.USER_ADMIN_ROLE))
+            {
+                <partial name="_ShoppingCartItems" />
+            }
+
             @RenderBody()
         </main>
     </div>
