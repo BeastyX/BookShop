@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Greška";
+}
+
+<!-- Big Card -->
+<div class="card shadow border-0 mt-4 mx-auto col-10 col-md-8 col-lg-6">
+
+    <!-- Header -->
+    <div class="card-header bg-warning bg-gradient py-2 mb-3">
+        <div class="col-12 text-center text-white">
+            <h3>@ViewData["Title"]</h3>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="card-body p-4 text-center">
+        <h5 class="text-center">Tražena strana ne postoji!</h5>
+        <button class="btn btn-primary mt-3" onclick="history.back()"><i class="bi bi-arrow-left-circle me-2"></i>Prethodna stranica</button>
+    </div>
+</div>

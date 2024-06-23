@@ -50,4 +50,6 @@ app.MapRazorPages();
 
 await Utilities.SeedRolesAndCreateAdminAsync(app);
 
+app.UseStatusCodePagesWithRedirects("/home/error/{0}");
+
 app.Run();
