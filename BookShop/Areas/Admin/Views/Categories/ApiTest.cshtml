@@ -1,0 +1,146 @@
+﻿@model List<Category>
+
+@{
+    ViewData["Title"] = "Api Test";
+}
+
+<!-- Big Card -->
+<div class="card shadow border-0 mt-4">
+
+    <!-- Header -->
+    <div class="card-header bg-dark bg-gradient py-2 mb-3">
+        <div class="col-12 text-center text-white">
+            <h3>@ViewData["Title"]</h3>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="card-body p-4">
+
+        @* GET: api/Categories *@
+        <div>
+            <h4 class="text-info mb-3"><b>GET:</b> api/categories</h4>
+            <a class="btn btn-primary" onclick="window.location='/api/categories/'">Pokaži sve kategorije</a>
+        </div>
+
+        <hr class="my-4" />
+
+        @* GET: api/Categories/id *@
+        <div>
+            <h4 class="text-info mb-3"><b>GET:</b> api/categories/id</h4>
+            <div class="form-floating col-4">
+                <input id="categoryIdInput" class="form-control shadow border-0" placeholder="" value="1" />
+                <label>ID kategorije</label>
+
+                <button class="btn btn-primary mt-3" onclick="getCategory()">Pokaži kategoriju</button>
+            </div>
+        </div>
+
+        <hr class="my-4" />
+
+        @* POST: api/Categories *@
+        <div>
+            <h4 class="text-info mb-3"><b>POST:</b> api/categories</h4>
+            <div class="form-floating col-4">
+                <input id="categoryName" class="form-control shadow border-0" placeholder="" />
+                <label>Naziv kategorije</label>
+
+                <button class="btn btn-primary mt-3" onclick="createCategory()">Napravi kategoriju</button>
+            </div>
+        </div>
+
+        <hr class="my-4" />
+
+        @* PUT: api/Categories/id | DELETE: api/Categories/id*@
+        <div>
+            <h4 class="text-info mb-3"><b>PUT:</b> api/Categories/id<span class="mx-3">|</span><b>DELETE:</b> api/Categories/id</h4>
+
+            @foreach (var category in Model)
+            {
+                <div class="row mb-3 align-items-center">
+                    <div class="col-auto text-end" style="width: 3em;">
+                        <label>@category.Id</label>
+                    </div>
+
+                    <div class="col-4">
+                        <input id="editCategoryName@(category.Id)" value="@category.Name" class="form-control shadow border-0 py-3" />
+                    </div>
+
+                    <div class="col">
+                        <button class="btn btn-primary" onclick="editCategory(@category.Id)">Izmeni ime</button>
+                        <button class="btn btn-danger ms-2" onclick="deleteCategory(@category.Id)">Obriši</button>
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script>
+
+        // GET: api/Categories/id
+        function getCategory() {
+            var id = document.getElementById("categoryIdInput").value;
+            window.location.href = '/api/categories/' + id;
+        }
+
+        // POST: api/Categories         - Create Category
+        function createCategory() {
+            var categoryName = $("#categoryName").val();
+
+            $.ajax({
+                url: '/api/Categories',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ Name: categoryName }),
+                success: function (result) {
+                    alert("Kategorija uspešno kreirana!");
+                    location.reload();
+                },
+                error: function (error) {
+                    alert("Error: " + error.responseText);
+                }
+            });
+        }
+
+        // PUT: api/Categories/{id}     - Edit Category
+        function editCategory(id) {
+            var categoryName = $("#editCategoryName" + id).val();
+
+            $.ajax({
+                url: '/api/Categories/' + id,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({ Id: id, Name: categoryName }),
+                success: function (result) {
+                    alert("Kategorija uspešno izmenjena!");
+                    location.reload();
+                },
+                error: function (error) {
+                    alert("Error: " + error.responseText);
+                    location.reload();
+                }
+            });
+        }
+
+        // DELETE: api/Categories/{id}  - Delete Category
+        function deleteCategory(id) {
+            $.ajax({
+                url: '/api/Categories/' + id,
+                type: 'DELETE',
+                success: function (result) {
+                    alert("Kategorija uspešno izbrisana!");
+                    location.reload();
+                },
+                error: function (error) {
+                    alert("Error: " + error.responseText);
+                    location.reload();
+                }
+            });
+        }
+    </script>
+}

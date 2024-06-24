@@ -179,4 +179,11 @@ public class CategoriesController : Controller
         TempData["Success"] = "Kategorija uspešno obrisana!";
         return RedirectToAction(nameof(Index));
     }
+
+    public IActionResult ApiTest()
+    {
+        var categories = _context.Categories.ToList();
+
+        return View(categories);
+    }
 }
