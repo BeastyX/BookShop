@@ -1,0 +1,104 @@
+@using Newtonsoft.Json
+@model Order
+
+@{
+    ViewData["Title"] = "Nova Narudžbina";
+    var booksListJson = JsonConvert.SerializeObject(ViewData["BooksList"] as List<SelectListItem>);
+}
+
+<a class="btn btn-secondary my-2 px-4 py-2" asp-action="Index"><i class="bi bi-arrow-left-circle me-2"></i>Prethodna stranica</a>
+
+<!-- Big Card -->
+<div class="card shadow border-0 mt-4">
+
+    <!-- Header -->
+    <div class="card-header bg-dark bg-gradient py-2 mb-3">
+        <div class="col-12 text-center text-white">
+            <h3>@ViewData["Title"]</h3>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="card-body p-4">
+
+        <form asp-action="Create" method="post">
+
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-floating col-12 mb-4">
+                <select asp-for="@Model.UserId" asp-items='@ViewData["UsersList"] as List<SelectListItem>' class="form-control shadow border-0">
+                    <option selected disabled>Izaberi korisnika</option>
+                </select>
+                <label asp-for="@Model.User"></label>
+                <span asp-validation-for="@Model.UserId" class="text-danger"></span>
+            </div>
+            
+            <div id="books-container">
+            </div>
+
+            <button type="button" id="add-book-btn" class="btn btn-secondary mt-2"><i class="bi bi-plus-circle me-2"></i>Dodaj knjigu</button>
+            <div class="text-danger">@ViewData.ModelState["Books"]?.Errors.FirstOrDefault()?.ErrorMessage</div>
+
+            <!-- Bottom Button -->
+            <div class="row mt-5">
+                <div class="col-6 col-lg-3">
+                    <button type="submit" class="btn btn-primary container-fluid"><i class="bi bi-plus-circle me-2"></i>Kreiraj narudžbinu</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.getElementById('add-book-btn').addEventListener('click', function () {
+            var booksContainer = document.getElementById('books-container');
+
+            // Kreiraj novi div za formu knjige
+            var bookDiv = document.createElement('div');
+            bookDiv.className = 'form-floating col-12 mb-2';
+
+            // Kreiraj select element za knjige
+            var selectElement = document.createElement('select');
+            selectElement.name = 'Books';
+            selectElement.className = 'form-control shadow border-0';
+
+            // Dodaj default opciju
+            var defaultOption = document.createElement('option');
+            defaultOption.selected = true;
+            defaultOption.disabled = true;
+            defaultOption.textContent = 'Izaberi knjigu';
+            selectElement.appendChild(defaultOption);
+
+            // Dodaj opcije iz liste knjiga
+            var booksList = @Html.Raw(booksListJson);
+
+            booksList.forEach(function (book) {
+                var option = document.createElement('option');
+                option.value = book.Value;
+                option.textContent = book.Text;
+                selectElement.appendChild(option);
+            });
+
+            // Dodaj select element u div
+            bookDiv.appendChild(selectElement);
+
+            // Kreiraj label element
+            var labelElement = document.createElement('label');
+            labelElement.textContent = 'Knjiga #' + (booksContainer.childElementCount + 1);
+            bookDiv.appendChild(labelElement);
+
+            // Kreiraj span element za validaciju
+            var spanElement = document.createElement('span');
+            spanElement.className = 'text-danger';
+            bookDiv.appendChild(spanElement);
+
+            // Dodaj div u books-container
+            booksContainer.appendChild(bookDiv);
+        });
+    </script>
+}

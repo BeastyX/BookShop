@@ -13,6 +13,10 @@
                     @if (User.IsInRole(Utilities.USER_ADMIN_ROLE))
                     {
                         <li class="nav-item">
+                            <a class="nav-link" asp-area="Admin" asp-controller="Orders" asp-action="Index">Narudžbine</a>
+                        </li>
+
+                        <li class="nav-item">
                             <a class="nav-link" asp-area="Admin" asp-controller="Books" asp-action="Index">Knjige</a>
                         </li>
 

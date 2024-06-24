@@ -1,0 +1,75 @@
+﻿@model Order
+
+@{
+    ViewData["Title"] = "Narudžbina";
+}
+
+<a class="btn btn-secondary my-2 px-4 py-2" asp-action="Index"><i class="bi bi-arrow-left-circle me-2"></i>Prethodna stranica</a>
+
+<!-- Big Card -->
+<div class="card shadow border-0 mt-4">
+
+    <!-- Header -->
+    <div class="card-header bg-dark bg-gradient py-2 mb-3">
+        <div class="col-12 text-center text-white">
+            <h3>@ViewData["Title"]</h3>
+        </div>
+    </div>
+
+    <div class="text-center my-4">
+        <label class="h5 me-3 fw-bolder">Datum narudžbine:</label>
+        <label class="h5 text-info me-lg-3 fw-bolder">@Utilities.GetDateInSerbian(Model.OrderDate)</label>
+    </div>
+
+    <!-- Content -->
+    <div class="card-body p-4">
+
+        <table class="table table-hover w-100" id=@Utilities.DATA_TABLE_NAME>
+            <thead>
+                <tr>
+                    <th scope="col" class="bg-light d-none d-sm-table-cell">@Html.DisplayNameFor(Model => Model.OrderItems!.ToList()[0].Id)</th>
+                    <th scope="col" class="bg-light d-none d-sm-table-cell">@Html.DisplayNameFor(Model => Model.OrderItems!.ToList()[0].Book)</th>
+                    <th scope="col" class="bg-light d-none d-sm-table-cell">@Html.DisplayNameFor(Model => Model.OrderItems!.ToList()[0].Price)</th>
+                    <th scope="col" class="bg-light no-sort ps-3">Alati</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model.OrderItems!)
+                {
+                    <tr>
+                        <td class="d-none d-sm-table-cell">@item.Id</td>
+                        <td>@($"{item.Book?.Title} - {item.Book?.Author}")</td>
+                        <td class="text-end"><span class="me-4">@Utilities.GetPriceInDinars(item.Price)</span></td>
+
+                        <td class="text-nowrap ps-3">
+                            <form asp-action="DeleteOrderItem" asp-route-orderId="@Model.Id" asp-route-orderItemId="@item.Id" onsubmit=@Utilities.DELETE_CONFIRMATION_ONSUBMIT_FORM_CALL class="d-inline" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" asp-for="@Model.Id" />
+                                <input type="hidden" asp-for="@item.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm px-1 px-sm-2 px-md-4" onclick="event.stopPropagation();">
+                                    <i class="bi bi-trash-fill me-0 me-md-2"></i><span class="d-block d-sm-block d-md-inline">Obriši</span>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td class="text-end">
+                        <label class="h5 me-3 fw-bolder my-3">Ukupna cena:</label>
+                        <label class="h5 text-info fw-bolder me-4">@Utilities.GetPriceInDinars(Model.OrderItems!.Sum(o => o.Price))</label>
+                    </td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts
+{
+    <partial name="_DataTablePartial" />
+}
